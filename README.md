@@ -18,6 +18,9 @@ Para hacer funcionar el sistema de monitoreo necesitarás el siguiente plugin de
 
 Resources:
 https://github.com/Joshi425/minecraft-exporter/blob/master/docker-compose.yaml
+
 https://github.com/Joshi425/minecraft-exporter
+
 https://grafana.com/grafana/dashboards/11993
+
 https://grafana.com/grafana/dashboards/11994

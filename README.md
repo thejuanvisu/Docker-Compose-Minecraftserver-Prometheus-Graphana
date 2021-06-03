@@ -15,3 +15,9 @@ En este momento el proyecto está todavía en desarrollo y este primer código q
 
 Para hacer funcionar el sistema de monitoreo necesitarás el siguiente plugin de minecraft: https://www.spigotmc.org/resources/prometheus-exporter.36618/
 
+
+Resources:
+https://github.com/Joshi425/minecraft-exporter/blob/master/docker-compose.yaml
+https://github.com/Joshi425/minecraft-exporter
+https://grafana.com/grafana/dashboards/11993
+https://grafana.com/grafana/dashboards/11994

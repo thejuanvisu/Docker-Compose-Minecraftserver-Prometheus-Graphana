@@ -1,5 +1,4 @@
 version: '3.3'
-# Other docker-compose examples in /examples
 
 services:
   minecraft:

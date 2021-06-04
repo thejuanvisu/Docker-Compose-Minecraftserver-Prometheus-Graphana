@@ -1,4 +1,4 @@
-version: '3.1'
+version: '3.3'
 # Other docker-compose examples in /examples
 
 services:
@@ -24,78 +24,78 @@ services:
 #      - /path/to/minecraft/world:/world:ro
 
 
-node-exporter:
-  image: prom/node-exporter:v0.18.1
-  volumes:
-    - /proc:/host/proc:ro
-    - /sys:/host/sys:ro
-    - /:/rootfs:ro
-  command:
-    - "--path.procfs=/host/proc"
-    - "--path.sysfs=/host/sys"
-    - "--collector.filesystem.ignored-mount-points"
-    - "^(aufs|proc|nsfs|shm|cgroup|tmpfs|binfmt_misc|debugfs|devpts|fusectl|hugetlbfs|fuse.lxcfs|mqueue|pstore|securityfs|sysfs|autofs|devtmpfs|configfs)"
+  node-exporter:
+    image: prom/node-exporter:v0.18.1
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - "--path.procfs=/host/proc"
+      - "--path.sysfs=/host/sys"
+      - "--collector.filesystem.ignored-mount-points"
+      - "^(aufs|proc|nsfs|shm|cgroup|tmpfs|binfmt_misc|debugfs|devpts|fusectl|hugetlbfs|fuse.lxcfs|mqueue|pstore|securityfs|sysfs|autofs|devtmpfs|configfs)"
 
 
-postgres:
-  image: postgres:13.2-alpine
-  restart: always
-  hostname: postgres
-  container_name: postgres
-  environment:
-    POSTGRES_PASSWORD: postgres #Se recomienda cambiar la contraseña
-  ports:
-    - 5432:5432
-  volumes:
-    - './postgres_data:/var/lib/postgresql/data'
+  postgres:
+    image: postgres:13.2-alpine
+    restart: always
+    hostname: postgres
+    container_name: postgres
+    environment:
+      POSTGRES_PASSWORD: postgres #Se recomienda cambiar la contraseña
+    ports:
+      - 5432:5432
+    volumes:
+      - './postgres_data:/var/lib/postgresql/data'
 
 
-postgres_exporter:
-  # Used to expose PostgreSQL metrics to prometheus
-  # https://github.com/prometheus-community/postgres_exporter
-  image: quay.io/prometheuscommunity/postgres-exporter
-  container_name: postgre_exporter
-  # You need to use this hostname from prometeus to get the PostgreSQL metrics
-  hostname: postgre_exporter
-  ports:
-    - 9187:9187
-  environment:
-    # String to connect with PostgreSQL to expose metrics
-    DATA_SOURCE_NAME: "postgresql://postgres:postgres@192.168.21.61:5432/postgres?sslmode=disable"
-    #"postgresql://user:password@localhost:5432/postgres?sslmode=disable"
+  postgres_exporter:
+    # Used to expose PostgreSQL metrics to prometheus
+    # https://github.com/prometheus-community/postgres_exporter
+    image: quay.io/prometheuscommunity/postgres-exporter
+    container_name: postgre_exporter
+    # You need to use this hostname from prometeus to get the PostgreSQL metrics
+    hostname: postgre_exporter
+    ports:
+      - 9187:9187
+    environment:
+      # String to connect with PostgreSQL to expose metrics
+      DATA_SOURCE_NAME: "postgresql://postgres:postgres@192.168.21.61:5432/postgres?sslmode=disable"
+      #"postgresql://user:password@localhost:5432/postgres?sslmode=disable"
 
 
-grafana:
-  image: grafana/grafana:6.5.0
-  container_name: grafana
-  hostname: grafana
-  depends_on:
-    - postgres
-  ports:
-    - 3000:3000
-  volumes:
+  grafana:
+    image: grafana/grafana:6.5.0
+    container_name: grafana
+    hostname: grafana
+    depends_on:
+      - postgres
+    ports:
+      - 3000:3000
+    volumes:
         # This volume is to get access to dashboards and datasources outside the docker and to 
         # pass dashboards and datasources to Grafana docker
-    - ./grafana/provisioning:/etc/grafana/provisioning
+      - ./grafana/provisioning:/etc/grafana/provisioning
         #- ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
         #- ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
-  environment:
-    GF_INSTALL_PLUGINS: grafana-worldmap-panel
-    GF_AUTH_DISABLE_LOGIN_FORM: "true"
-    GF_AUTH_ANONYMOUS_ENABLED: "true"
-    GF_AUTH_ANONYMOUS_ORG_ROLE: "Admin"
+    environment:
+      GF_INSTALL_PLUGINS: grafana-worldmap-panel
+      GF_AUTH_DISABLE_LOGIN_FORM: "true"
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: "Admin"
     
   
-prometheus:
-  image: prom/prometheus
-  container_name: prometheus
-  hostname: prometheus
-  ports:
-    - 9090:9090
-  volumes:
-    - ./prometheus:/etc/prometheus
-  command:
-    - --config.file=/etc/prometheus/prometheus.yml
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    hostname: prometheus
+    ports:
+      - 9090:9090
+    volumes:
+      - ./prometheus:/etc/prometheus
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
 
 
 volumes:

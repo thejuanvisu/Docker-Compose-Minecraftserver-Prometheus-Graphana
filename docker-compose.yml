@@ -12,18 +12,6 @@ services:
       EULA: "TRUE"
     restart: always
 
-#  minecraft-exporter:
-#    image: joshi425/minecraft_exporter
-#      environment:
-#        RCON_HOST: 127.0.0.1 \
-#        RCON_PORT: 25575
-#        RCON_PASSWORD: password
-#      ports:
-#      - 9700:8000
-#      volumes:
-#      - /path/to/minecraft/world:/world:ro
-
-
   node-exporter:
     image: prom/node-exporter:v0.18.1
     volumes:
@@ -96,7 +84,19 @@ services:
       - ./prometheus:/etc/prometheus
     command:
       - --config.file=/etc/prometheus/prometheus.yml
-
+  
+  minecraft-exporter:
+    image: joshi425/minecraft_exporter
+    environment: 
+      RCON_HOST: 127.0.0.1 
+      RCON_PORT: 25575 
+      RCON_PASSWORD: password 
+      ports: 
+      - "9700:8000"
+      volumes: 
+      - /path/to/minecraft/world:wordl:ro
+    
+      
 
 volumes:
   mc: {}
